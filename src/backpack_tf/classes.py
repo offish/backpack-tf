@@ -1,0 +1,55 @@
+from dataclasses import dataclass, field
+
+
+@dataclass
+class Currencies:
+    keys: int = 0
+    metal: float = 0.0
+
+
+@dataclass
+class Entity:
+    name: str = ""
+    id: int = 0
+    color: str = ""
+
+
+@dataclass
+class ItemDocument:
+    appid: int
+    baseName: str
+    defindex: int
+    id: str
+    imageUrl: str
+    marketName: str
+    name: str
+    # origin: None
+    originalId: str
+    price: dict
+    quality: Entity
+    summary: str
+    # class: list
+    slot: str
+    tradable: bool
+    craftable: bool
+
+
+@dataclass
+class Listing:
+    id: str
+    steamid: str
+    appid: int
+    currencies: Currencies
+    value: dict
+    details: str
+    listedAt: int
+    bumpedAt: int
+    intent: str
+    count: int
+    status: str
+    source: str
+    item: ItemDocument
+    user: dict
+    userAgent: dict = field(default_factory=dict)
+    tradeOffersPreferred: bool = None
+    buyoutOnly: bool = None
