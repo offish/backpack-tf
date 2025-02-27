@@ -7,7 +7,7 @@ name = "backpack-tf"
 authors = [
   { name="offish", email="overutilization@gmail.com" },
 ]
-description = "Interact with Backpack.tf"
+description = "Create and manage Backpack.tf listings (API v2) using Python 3"
 readme = "README.md"
 requires-python = ">=3.10"
 keywords = ["tf2", "backpack-tf", "utils", "sku"]

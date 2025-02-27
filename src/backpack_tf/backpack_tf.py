@@ -23,7 +23,7 @@ class BackpackTF:
         self._user_agent = user_agent
         self._user_token = None
         self._schema = SchemaItemsUtils()
-        self.__headers = {"User-Agent": f"tf2-utils | {self._user_agent}"}
+        self.__headers = {"User-Agent": f"{self._user_agent} | tf2-utils"}
 
     @needs_token
     def _request(self, method: str, endpoint: str, params: dict = {}, **kwargs) -> dict:
@@ -32,6 +32,10 @@ class BackpackTF:
             method, self.URL + endpoint, params=params, headers=self.__headers, **kwargs
         )
         return response.json()
+
+    def _get_sku_item_hash(self, sku: str) -> str:
+        item_name = self._schema.sku_to_base_name(sku)
+        return get_item_hash(item_name)
 
     def _construct_listing_item(self, sku: str) -> dict:
         return {
@@ -84,10 +88,6 @@ class BackpackTF:
 
     def delete_listing(self, listing_id: str) -> dict:
         return self._request("DELETE", f"/v2/classifieds/listings/{listing_id}")
-
-    def _get_sku_item_hash(self, sku: str) -> str:
-        item_name = self._schema.sku_to_full_name(sku)
-        return get_item_hash(item_name)
 
     def delete_listing_by_asset_id(self, asset_id: int) -> dict:
         listing_id = f"440_{asset_id}"

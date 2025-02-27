@@ -1,7 +1,7 @@
 import json
 from typing import Any, Callable
 
-from websockets import connect
+from websockets.sync.client import connect
 
 
 class BackpackTFWebsocket:
@@ -45,7 +45,7 @@ class BackpackTFWebsocket:
             self.URL,
             additional_headers=self._headers,
             max_size=self._max_size,
-            **self.settings,
+            **self._settings,
         ) as websocket:
             while True:
                 data = websocket.recv()

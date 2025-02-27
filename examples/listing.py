@@ -1,10 +1,9 @@
 from backpack_tf import BackpackTF
 
 bptf = BackpackTF(
-    "token",
-    "76561198253325712",
-    "api key not needed as of now",
-    "superbot5000 user agent",
+    token="token",
+    steam_id="76561198253325712",
+    user_agent="superbot5000 user agent",
 )
 
 # will add the lightning icon and indicate that the user is a bot
@@ -22,12 +21,12 @@ listing = bptf.create_listing(
     "sell",
     {"keys": 1, "metal": 2.11},
     "selling my Siberian Sweater as i dont want it anymore",
-    11543535227,
+    asset_id,
 )
 
 print(listing)
 
-bptf.delete_listing_by_asset_id(11543535227)  # sell
-bptf.delete_listing_by_sku("5021;6")  # buy
+bptf.delete_listing_by_asset_id(asset_id)
+bptf.delete_listing_by_sku("5021;6")
 # or
 bptf.delete_all_listings()

@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from typing import Any
 
 
 @dataclass
@@ -39,7 +40,7 @@ class Listing:
     id: str
     steamid: str
     appid: int
-    currencies: Currencies
+    currencies: dict[str, Any]
     value: dict
     details: str
     listedAt: int
@@ -48,7 +49,7 @@ class Listing:
     count: int
     status: str
     source: str
-    item: ItemDocument
+    item: dict[str, Any]
     user: dict
     userAgent: dict = field(default_factory=dict)
     tradeOffersPreferred: bool = None

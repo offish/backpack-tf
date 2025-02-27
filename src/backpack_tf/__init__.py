@@ -1,6 +1,6 @@
 # flake8: noqa
 __title__ = "backpack-tf"
-__version__ = "1.0.0"
+__version__ = "0.1.0"
 __author__ = "offish"
 __license__ = "MIT"
 
