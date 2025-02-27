@@ -3,7 +3,7 @@ requires = ["setuptools>=45", "setuptools_scm[toml]>=6.2"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "backpack-tf"
+name = "bptf"
 authors = [
   { name="offish", email="overutilization@gmail.com" },
 ]

@@ -20,16 +20,16 @@ Create and manage Backpack.tf listings (API v2) using Python 3.
 ## Setup
 ### Install
 ```bash
-pip install backpack-tf
+pip install bptf
 # or 
-python -m pip install backpack-tf
+python -m pip install bptf
 ```
 
 ### Updating
 ```bash
-pip install --upgrade backpack-tf
+pip install --upgrade bptf
 # or 
-python -m pip install --upgrade backpack-tf
+python -m pip install --upgrade bptf
 ```
 
 ## Usage 
