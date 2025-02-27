@@ -3,7 +3,7 @@
 [![Issues](https://img.shields.io/github/issues/offish/backpack-tf.svg)](https://github.com/offish/backpack-tf/issues)
 [![Size](https://img.shields.io/github/repo-size/offish/backpack-tf.svg)](https://github.com/offish/backpack-tf)
 [![Discord](https://img.shields.io/discord/467040686982692865?color=7289da&label=Discord&logo=discord)](https://discord.gg/t8nHSvA)
-[![Downloads](https://img.shields.io/pypi/dm/backpack-tf)](https://pypi.org/project/backpack-tf/)
+[![Downloads](https://img.shields.io/pypi/dm/bptf)](https://pypi.org/project/bptf/)
 [![Code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
