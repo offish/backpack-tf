@@ -1,6 +1,7 @@
 import requests
 from tf2_utils import SchemaItemsUtils, sku_is_craftable, sku_to_quality
 
+from . import __version__ as version
 from .classes import Currencies, Listing
 from .exceptions import InvalidIntent
 from .utils import get_item_hash, needs_token
@@ -14,7 +15,7 @@ class BackpackTF:
         token: str,
         steam_id: str,
         api_key: str = None,
-        user_agent: str = "Listed with <3",
+        user_agent: str = "Listing goin' up!",
     ) -> None:
         del api_key  # for future use
 
@@ -23,13 +24,14 @@ class BackpackTF:
         self._user_agent = user_agent
         self._user_token = None
         self._schema = SchemaItemsUtils()
-        self.__headers = {"User-Agent": f"{self._user_agent} | tf2-utils"}
+        self._library = f"backpack-tf v{version}"
+        self._headers = {"User-Agent": f"{self._user_agent} | {self._library}"}
 
     @needs_token
     def _request(self, method: str, endpoint: str, params: dict = {}, **kwargs) -> dict:
         params["token"] = self._token
         response = requests.request(
-            method, self.URL + endpoint, params=params, headers=self.__headers, **kwargs
+            method, self.URL + endpoint, params=params, headers=self._headers, **kwargs
         )
         return response.json()
 

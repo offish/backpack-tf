@@ -1,6 +1,5 @@
-# flake8: noqa
 __title__ = "backpack-tf"
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 __author__ = "offish"
 __license__ = "MIT"
 
@@ -9,3 +8,5 @@ from .classes import Currencies, Entity, ItemDocument, Listing
 from .exceptions import BackpackTFException, NeedsAPIKey, NoTokenProvided
 from .utils import get_item_hash
 from .websocket import BackpackTFWebsocket
+
+# flake8: noqa: F401, F403
