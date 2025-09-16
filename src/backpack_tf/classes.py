@@ -50,7 +50,8 @@ class Listing:
     status: str
     source: str
     item: dict[str, Any]
-    user: dict
+    user: dict = field(default_factory=dict)  # Made optional for API compatibility
     userAgent: dict = field(default_factory=dict)
     tradeOffersPreferred: bool = None
     buyoutOnly: bool = None
+    archived: bool = field(default=False)  # Added for API compatibility
