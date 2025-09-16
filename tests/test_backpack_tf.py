@@ -1,14 +1,13 @@
 import pytest
 from requests.exceptions import HTTPError
 
-from src.backpack_tf import BackpackTF, Listing, __version__
+from src.backpack_tf import BackpackTF, Listing, NeedsAPIKey, __version__
 
 bptf = None
-steam_id = "76561198253325712"
 user_agent = f"Listing goin' up! | backpack-tf v{__version__}"
 
 
-def test_initiate_backpack_tf(backpack_tf_token: str) -> None:
+def test_initiate_backpack_tf(backpack_tf_token: str, steam_id: str) -> None:
     global bptf
     bptf = BackpackTF(backpack_tf_token, steam_id)
 
@@ -71,7 +70,7 @@ def test_user_agent() -> None:
     assert data["expire_at"] > 0
 
 
-def test_create_listing() -> None:
+def test_create_listing(steam_id: str) -> None:
     listing = bptf.create_listing(
         "263;6", "buy", {"keys": 0, "metal": 0.11}, "my test description"
     )
@@ -122,12 +121,29 @@ def test_get_snapshot() -> None:
 
 
 def test_get_user_trade_url() -> None:
-    trade_url = bptf.get_user_trade_url("440_16109366608")
+    trade_url = bptf.get_user_trade_url(
+        "440_76561198833734475_1a8517883bbf43681bb46e641b9a37cf"
+    )
 
     assert (
         trade_url
-        == "https://steamcommunity.com/tradeoffer/new/?partner=1267246252&token=CQ7ygVdB"
+        == "https://steamcommunity.com/tradeoffer/new/?partner=873468747&token=Jo_z8-CT"
     )
+
+
+def test_is_banned(
+    backpack_tf_token: str, steam_id: str, backpack_tf_api_key: str
+) -> None:
+    global bptf
+
+    with pytest.raises(NeedsAPIKey):
+        bptf.is_banned(steam_id)
+
+    bptf = BackpackTF(backpack_tf_token, steam_id, backpack_tf_api_key)
+
+    assert not bptf.is_banned("76561198253325712")
+    assert not bptf.is_banned("76561198828172881")
+    assert bptf.is_banned("76561199505594824")
 
 
 def test_stop_user_agent() -> None:
