@@ -22,7 +22,6 @@ class BackpackTF:
         self._token = token
         self._steam_id = steam_id
         self._user_agent = user_agent
-        self._user_token = None
         self._schema = SchemaItemsUtils()
         self._library = f"backpack-tf v{version}"
         self._headers = {"User-Agent": f"{self._user_agent} | {self._library}"}
@@ -33,6 +32,7 @@ class BackpackTF:
         response = requests.request(
             method, self.URL + endpoint, params=params, headers=self._headers, **kwargs
         )
+        response.raise_for_status()
         return response.json()
 
     def _get_sku_item_hash(self, sku: str) -> str:
@@ -67,6 +67,19 @@ class BackpackTF:
 
         return listing
 
+    def get_snapshot(self, item_name: str) -> list[dict]:
+        endpoint = "/classifieds/listings/snapshot"
+        params = {"appid": 440, "sku": item_name}
+        return self._request("GET", endpoint, params=params)
+
+    def get_listing(self, listing_id: str) -> dict:
+        endpoint = f"/v2/classifieds/listings/{listing_id}"
+        return self._request("GET", endpoint)
+
+    def get_user_trade_url(self, listing_id: str) -> str:
+        user = self.get_listing(listing_id).get("user", {})
+        return user.get("tradeOfferUrl", "")
+
     def get_listings(self, skip: int = 0, limit: int = 100) -> dict:
         return self._request(
             "GET", "/v2/classifieds/listings", {"skip": skip, "limit": limit}
@@ -77,7 +90,6 @@ class BackpackTF:
     ) -> Listing:
         listing = self._construct_listing(sku, intent, currencies, details, asset_id)
         response = self._request("POST", "/v2/classifieds/listings", json=listing)
-
         return Listing(**response)
 
     def create_listings(self, listings: list[dict]) -> list[Listing]:
