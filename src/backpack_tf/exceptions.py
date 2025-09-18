@@ -12,3 +12,7 @@ class NeedsAPIKey(BackpackTFException):
 
 class InvalidIntent(BackpackTFException):
     pass
+
+
+class UserNotFound(BackpackTFException):
+    pass

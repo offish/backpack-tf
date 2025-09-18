@@ -141,6 +141,7 @@ def test_is_banned(
 
     bptf = BackpackTF(backpack_tf_token, steam_id, backpack_tf_api_key)
 
+    assert not bptf.is_banned(76561198253325712)
     assert not bptf.is_banned("76561198253325712")
     assert not bptf.is_banned("76561198828172881")
     assert bptf.is_banned("76561199505594824")
