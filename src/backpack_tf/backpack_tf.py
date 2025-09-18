@@ -3,8 +3,8 @@ from tf2_utils import SchemaItemsUtils, sku_is_craftable, sku_to_quality
 
 from . import __version__ as version
 from .classes import Currencies, Listing
-from .exceptions import InvalidIntent
-from .utils import get_item_hash, needs_token
+from .exceptions import InvalidIntent, UserNotFound
+from .utils import get_item_hash, needs_api_key, needs_token
 
 
 class BackpackTF:
@@ -17,10 +17,9 @@ class BackpackTF:
         api_key: str = None,
         user_agent: str = "Listing goin' up!",
     ) -> None:
-        del api_key  # for future use
-
         self._token = token
         self._steam_id = steam_id
+        self._api_key = api_key
         self._user_agent = user_agent
         self._schema = SchemaItemsUtils()
         self._library = f"backpack-tf v{version}"
@@ -29,6 +28,10 @@ class BackpackTF:
     @needs_token
     def _request(self, method: str, endpoint: str, params: dict = {}, **kwargs) -> dict:
         params["token"] = self._token
+
+        if self._api_key:
+            params["key"] = self._api_key
+
         response = requests.request(
             method, self.URL + endpoint, params=params, headers=self._headers, **kwargs
         )
@@ -66,6 +69,19 @@ class BackpackTF:
             listing["id"] = asset_id
 
         return listing
+
+    @needs_api_key
+    def is_banned(self, steam_id: str | int) -> bool:
+        if isinstance(steam_id, int):
+            steam_id = str(steam_id)
+
+        response = self._request("GET", "/users/info/v1", params={"steamids": steam_id})
+
+        if "users" not in response or steam_id not in response["users"]:
+            raise UserNotFound(f"User {steam_id} not found {response}")
+
+        user = response["users"][steam_id]
+        return user.get("bans") is not None
 
     def get_snapshot(self, item_name: str) -> list[dict]:
         endpoint = "/classifieds/listings/snapshot"
