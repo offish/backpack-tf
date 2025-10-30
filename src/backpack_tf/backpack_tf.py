@@ -128,6 +128,11 @@ class BackpackTF:
         listing_id = f"440_{self._steam_id}_{item_hash}"
         return self.delete_listing(listing_id)
 
+    def delete_listing_by_item_name(self, item_name: str) -> dict:
+        item_hash = get_item_hash(item_name)
+        listing_id = f"440_{self._steam_id}_{item_hash}"
+        return self.delete_listing(listing_id)
+
     def register_user_agent(self) -> dict:
         return self._request("POST", "/agent/pulse")
 
