@@ -5,8 +5,6 @@ from websockets.sync.client import connect
 
 
 class BackpackTFWebsocket:
-    URL = "wss://ws.backpack.tf/events"
-
     def __init__(
         self,
         callback: Callable[[dict | list[dict]], None],
@@ -20,6 +18,7 @@ class BackpackTFWebsocket:
             callback: Function pointer where the data to ends up
             as_solo_entries: If data to callback should be solo entries or a batched list
             headers: Additional headers to send to the socket
+            max_size: Maximum size of messages to receive. None for unlimited
             settings: Additional websocket settings as a dict to be unpacked
         """
         self._callback = callback
@@ -42,7 +41,7 @@ class BackpackTFWebsocket:
     def listen(self) -> None:
         """Listen for messages from BackpackTF"""
         with connect(
-            self.URL,
+            "wss://ws.backpack.tf/events",
             additional_headers=self._headers,
             max_size=self._max_size,
             **self._settings,
