@@ -50,6 +50,7 @@ class Listing:
     status: str
     source: str
     item: dict[str, Any]
+    deal: dict[str, Any] = field(default_factory=dict)
     user: dict = field(default_factory=dict)  # Made optional for API compatibility
     userAgent: dict = field(default_factory=dict)
     tradeOffersPreferred: bool = None
