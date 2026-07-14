@@ -32,7 +32,6 @@ def construct_listing(
         raise InvalidIntent(f"{intent} must be buy or sell")
 
     listing = {
-        "item": construct_listing_item(sku),
         "buyout": True,
         "offers": True,
         "promoted": False,
@@ -42,6 +41,8 @@ def construct_listing(
 
     if intent == "sell":
         listing["id"] = asset_id
+    elif intent == "buy":
+        listing["item"] = construct_listing_item(sku)
 
     return listing
 

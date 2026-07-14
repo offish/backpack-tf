@@ -41,12 +41,6 @@ def test_construct_listing() -> None:
         "buyout": True,
         "offers": True,
         "promoted": False,
-        "item": {
-            "baseName": "Ellis' Cap",
-            "craftable": True,
-            "quality": {"id": 6},
-            "tradable": True,
-        },
         "currencies": {"keys": 1, "metal": 1.55},
         "details": "my description",
         "id": 13201231975,
