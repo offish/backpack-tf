@@ -1,5 +1,5 @@
 import json
-from typing import Any, Callable
+from typing import Callable
 
 from websockets.sync.client import connect
 
@@ -9,9 +9,9 @@ class BackpackTFWebsocket:
         self,
         callback: Callable[[dict | list[dict]], None],
         as_solo_entries: bool = True,
-        headers: dict[str, Any] = {"batch-test": True},
+        headers: dict = {"batch-test": True},
         max_size: int | None = None,
-        settings: dict[str, Any] = {},
+        settings: dict = {},
     ) -> None:
         """
         Args:
@@ -39,7 +39,7 @@ class BackpackTFWebsocket:
             self._callback(payload)
 
     def listen(self) -> None:
-        """Listen for messages from BackpackTF"""
+        """Listen to BackpackTF websocket events"""
         with connect(
             "wss://ws.backpack.tf/events",
             additional_headers=self._headers,

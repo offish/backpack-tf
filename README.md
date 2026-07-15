@@ -8,10 +8,7 @@
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 
-Create and manage Backpack.tf listings (API v2) using Python 3.
-
-> [!TIP]
-> Consider using tf2-utils' [ListingManager](https://github.com/offish/tf2-utils) instead of `backpack-tf` directly.
+Create and manage Backpack.TF listings (API v2) using Python 3.
 
 ## Donate
 - BTC: `bc1q9gmh5x2g9s0pw3282a5ypr6ms8qvuxh3fd7afh`
@@ -33,7 +30,7 @@ python -m pip install --upgrade bptf
 ```
 
 ## Usage 
-See the [examples](/examples/) or use the [ListingManager in tf2-utils](https://github.com/offish/tf2-utils).
+See the [examples](/examples/).
 
 ## Testing
 ```bash
