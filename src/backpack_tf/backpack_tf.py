@@ -2,7 +2,7 @@ import requests
 from aiohttp import ClientSession
 
 from . import __title__, __version__
-from .classes import Listing
+from .classes import Currencies, Listing
 from .exceptions import NeedsAPIKey, UserNotFound
 from .utils import (
     construct_listing,
@@ -77,16 +77,31 @@ class BackpackTF:
         return user.get("tradeOfferUrl", "")
 
     def get_listings(self, skip: int = 0, limit: int = 100) -> dict:
-        return self.request(
-            "GET", "/v2/classifieds/listings", {"skip": skip, "limit": limit}
-        )
+        endpoint = "/v2/classifieds/listings"
+        params = {"skip": skip, "limit": limit}
+        return self.request("GET", endpoint, params)
 
     def create_listing(
-        self, sku: str, intent: str, currencies: dict, details: str, asset_id: int = 0
+        self,
+        intent: str,
+        currencies: dict | Currencies,
+        details: str,
+        sku: str = None,
+        asset_id: int | str = 0,
     ) -> Listing:
-        listing = construct_listing(sku, intent, currencies, details, asset_id)
+        listing = construct_listing(intent, currencies, details, sku, asset_id)
         response = self.request("POST", "/v2/classifieds/listings", json=listing)
         return Listing(**response)
+
+    def create_buy_listing(
+        self, sku: str, currencies: dict | Currencies, details: str
+    ) -> Listing:
+        return self.create_listing("buy", currencies, details, sku=sku)
+
+    def create_sell_listing(
+        self, asset_id: int | str, currencies: dict | Currencies, details: str
+    ) -> Listing:
+        return self.create_listing("sell", currencies, details, asset_id=asset_id)
 
     def create_listings(self, listings: list[dict]) -> list[Listing]:
         to_list = [construct_listing(**listing) for listing in listings]
@@ -99,24 +114,21 @@ class BackpackTF:
     def delete_listing(self, listing_id: str) -> dict:
         return self.request("DELETE", f"/v2/classifieds/listings/{listing_id}")
 
-    def delete_listing_by_asset_id(self, asset_id: int) -> dict:
+    def delete_listing_by_asset_id(self, asset_id: int | str) -> dict:
         listing_id = f"440_{asset_id}"
         return self.delete_listing(listing_id)
 
-    def delete_listing_by_item_name(
-        self, item_name: str, is_hash: bool = False
-    ) -> dict:
-        item_hash = item_name
-
-        if not is_hash:
-            item_hash = get_item_hash(item_name)
-
-        listing_id = f"440_{self._steam_id}_{item_hash}"
+    def delete_listing_by_hash(self, hash: str) -> dict:
+        listing_id = f"440_{self._steam_id}_{hash}"
         return self.delete_listing(listing_id)
+
+    def delete_listing_by_item_name(self, item_name: str) -> dict:
+        item_hash = get_item_hash(item_name)
+        return self.delete_listing_by_hash(item_hash)
 
     def delete_listing_by_sku(self, sku: str) -> dict:
         item_hash = get_sku_item_hash(sku)
-        return self.delete_listing_by_item_name(item_hash, is_hash=True)
+        return self.delete_listing_by_hash(item_hash)
 
     def register_user_agent(self) -> dict:
         return self.request("POST", "/agent/pulse")
@@ -202,11 +214,26 @@ class AsyncBackpackTF:
         return await self.request("GET", endpoint, params)
 
     async def create_listing(
-        self, sku: str, intent: str, currencies: dict, details: str, asset_id: int = 0
+        self,
+        intent: str,
+        currencies: dict | Currencies,
+        details: str,
+        sku: str = None,
+        asset_id: int | str = 0,
     ) -> Listing:
-        listing = construct_listing(sku, intent, currencies, details, asset_id)
+        listing = construct_listing(intent, currencies, details, sku, asset_id)
         response = await self.request("POST", "/v2/classifieds/listings", json=listing)
         return Listing(**response)
+
+    async def create_buy_listing(
+        self, sku: str, currencies: dict | Currencies, details: str
+    ) -> Listing:
+        return await self.create_listing("buy", currencies, details, sku=sku)
+
+    async def create_sell_listing(
+        self, asset_id: int | str, currencies: dict | Currencies, details: str
+    ) -> Listing:
+        return await self.create_listing("sell", currencies, details, asset_id=asset_id)
 
     async def create_listings(self, listings: list[dict]) -> list[Listing]:
         endpoint = "/v2/classifieds/listings/batch"
@@ -220,24 +247,21 @@ class AsyncBackpackTF:
     async def delete_listing(self, listing_id: str) -> dict:
         return await self.request("DELETE", f"/v2/classifieds/listings/{listing_id}")
 
-    async def delete_listing_by_asset_id(self, asset_id: int) -> dict:
+    async def delete_listing_by_asset_id(self, asset_id: int | str) -> dict:
         listing_id = f"440_{asset_id}"
         return await self.delete_listing(listing_id)
 
-    async def delete_listing_by_item_name(
-        self, item_name: str, is_hash: bool = False
-    ) -> dict:
-        item_hash = item_name
-
-        if not is_hash:
-            item_hash = get_item_hash(item_name)
-
-        listing_id = f"440_{self._steam_id}_{item_hash}"
+    async def delete_listing_by_hash(self, hash: str) -> dict:
+        listing_id = f"440_{self._steam_id}_{hash}"
         return await self.delete_listing(listing_id)
+
+    async def delete_listing_by_item_name(self, item_name: str) -> dict:
+        item_hash = get_item_hash(item_name)
+        return await self.delete_listing_by_hash(item_hash)
 
     async def delete_listing_by_sku(self, sku: str) -> dict:
         item_hash = get_sku_item_hash(sku)
-        return await self.delete_listing_by_item_name(item_hash, is_hash=True)
+        return await self.delete_listing_by_hash(item_hash)
 
     async def register_user_agent(self) -> dict:
         return await self.request("POST", "/agent/pulse")

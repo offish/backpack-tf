@@ -16,3 +16,11 @@ class InvalidIntent(BackpackTFException):
 
 class UserNotFound(BackpackTFException):
     pass
+
+
+class InvalidAssetID(BackpackTFException):
+    pass
+
+
+class InvalidSKU(BackpackTFException):
+    pass

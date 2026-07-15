@@ -1,15 +1,7 @@
 import pytest
 from requests.exceptions import HTTPError
 
-from src.backpack_tf import (
-    BackpackTF,
-    Listing,
-    NeedsAPIKey,
-    __title__,
-    __version__,
-    construct_listing,
-    construct_listing_item,
-)
+from src.backpack_tf import BackpackTF, Listing, NeedsAPIKey, __title__, __version__
 
 bptf = None
 user_agent = f"Listing goin' up! | {__title__} v{__version__}"
@@ -21,48 +13,6 @@ def test_initiate_backpack_tf(backpack_tf_token: str, steam_id: str) -> None:
     bptf = BackpackTF(backpack_tf_token, steam_id)
 
 
-def test_construct_listing_item() -> None:
-    assert construct_listing_item("263;6") == {
-        "baseName": "Ellis' Cap",
-        "craftable": True,
-        "quality": {"id": 6},
-        "tradable": True,
-    }
-
-
-def test_construct_listing() -> None:
-    assert construct_listing(
-        "263;6",
-        "sell",
-        {"keys": 1, "metal": 1.55},
-        "my description",
-        13201231975,
-    ) == {
-        "buyout": True,
-        "offers": True,
-        "promoted": False,
-        "currencies": {"keys": 1, "metal": 1.55},
-        "details": "my description",
-        "id": 13201231975,
-    }
-
-    assert construct_listing(
-        "263;6", "buy", {"keys": 1, "metal": 1.55}, "my description"
-    ) == {
-        "buyout": True,
-        "offers": True,
-        "promoted": False,
-        "item": {
-            "baseName": "Ellis' Cap",
-            "craftable": True,
-            "quality": {"id": 6},
-            "tradable": True,
-        },
-        "currencies": {"keys": 1, "metal": 1.55},
-        "details": "my description",
-    }
-
-
 def test_user_agent() -> None:
     data = bptf.register_user_agent()
 
@@ -72,11 +22,9 @@ def test_user_agent() -> None:
     assert data["expire_at"] > 0
 
 
-def test_create_listing(steam_id: str) -> None:
+def test_create_buy_listing(steam_id: str) -> None:
     global listing_id
-    listing = bptf.create_listing(
-        "263;6", "buy", {"keys": 0, "metal": 0.11}, "my test description"
-    )
+    listing = bptf.create_buy_listing("263;6", {"metal": 0.11}, "my description")
 
     assert isinstance(listing, Listing)
     assert isinstance(listing.item, dict)
@@ -86,7 +34,7 @@ def test_create_listing(steam_id: str) -> None:
     assert listing.appid == 440
     assert listing.listedAt > 0
     assert listing.currencies == {"metal": 0.11}
-    assert listing.details == "my test description"
+    assert listing.details == "my description"
     assert listing.item["craftable"]
     assert listing.item["quality"]["name"] == "Unique"
     assert listing.item["quality"]["id"] == 6
@@ -106,12 +54,7 @@ def test_get_user_trade_url(trade_url: str) -> None:
 
 def test_create_invalid_listing() -> None:
     with pytest.raises(HTTPError):
-        bptf.create_listing(
-            "-100;6",
-            "buy",
-            {"keys": 0, "metal": 0.11},
-            "test",
-        )
+        bptf.create_buy_listing("-100;6", {"keys": 0, "metal": 0.11}, "test")
 
 
 def test_delete_listing() -> None:

@@ -26,17 +26,13 @@ async def test_user_agent(
     assert data["expire_at"] > 0
 
 
-async def test_create_listing(
+async def test_create_buy_listing(
     aiohttp_session: ClientSession, backpack_tf_token: str, steam_id: str
 ) -> None:
     global listing_id
 
     bptf = AsyncBackpackTF(aiohttp_session, backpack_tf_token, steam_id)
-    sku = "263;6"
-    intent = "buy"
-    currencies = {"keys": 0, "metal": 0.11}
-    details = "my test description"
-    listing = await bptf.create_listing(sku, intent, currencies, details)
+    listing = await bptf.create_buy_listing("263;6", {"metal": 0.11}, "my description")
 
     assert isinstance(listing, Listing)
     assert isinstance(listing.item, dict)
@@ -46,7 +42,7 @@ async def test_create_listing(
     assert listing.appid == 440
     assert listing.listedAt > 0
     assert listing.currencies == {"metal": 0.11}
-    assert listing.details == "my test description"
+    assert listing.details == "my description"
     assert listing.item["craftable"]
     assert listing.item["quality"]["name"] == "Unique"
     assert listing.item["quality"]["id"] == 6
@@ -76,12 +72,7 @@ async def test_create_invalid_listing(
     bptf = AsyncBackpackTF(aiohttp_session, backpack_tf_token, steam_id)
 
     with pytest.raises(ClientResponseError):
-        await bptf.create_listing(
-            "-100;6",
-            "buy",
-            {"keys": 0, "metal": 0.11},
-            "test",
-        )
+        await bptf.create_buy_listing("-100;6", {"keys": 0, "metal": 0.11}, "test")
 
 
 async def test_delete_listing(

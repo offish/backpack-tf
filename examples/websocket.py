@@ -6,8 +6,7 @@ def my_function(data: list[dict]):
 
     for listing in data:
         print("listing", listing)
-
-    # your logic here
+        # your logic here
 
 
 socket = BackpackTFWebsocket(my_function, as_solo_entries=False)
